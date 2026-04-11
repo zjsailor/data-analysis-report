@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# Generated images
+*_distributions.png
+correlation_heatmap.png
+distributions.png
