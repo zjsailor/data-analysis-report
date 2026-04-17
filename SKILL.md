@@ -1,8 +1,8 @@
 ---
 name: data-analysis-report
-description: 智能数据分析工具，支持 CSV 和 XLSX 格式，自动生成统计图表和完整的 Word 分析报告。
+description: 智能数据分析工具，支持 CSV 和 XLSX 格式，自动生成统计图表和完整的 Word 分析报告。支持销售/医疗检测数据TOP10排名分析、中文显示优化。
 metadata:
-  version: 3.0.0
+  version: 4.0.0
   dependencies: python>=3.8, pandas>=2.0.0, openpyxl>=3.0.0, matplotlib>=3.7.0, seaborn>=0.12.0, python-docx>=0.8.11
 ---
 
@@ -29,7 +29,7 @@ metadata:
 
 1. ✅ **自动识别格式** - 支持 CSV、XLSX、XLS
 2. ✅ **全面分析** - 数据质量、数值分析、分类分析、时间序列
-3. ✅ **生成图表** - 相关性热力图、分布图、分类分布图等
+3. ✅ **生成图表** - TOP10排名、相关性热力图、分布图、分类分布图等
 4. ✅ **输出报告** - Markdown + Word 双格式
 5. ❌ **不询问** - 不问"想要什么分析"
 6. ❌ **不等待** - 不等待用户确认
@@ -45,7 +45,25 @@ metadata:
 | Excel 2007+ | .xlsx | ✅ 完全支持 |
 | Excel 97-2003 | .xls | ✅ 支持 |
 
-### 2. 自动数据分析
+### 2. 销售/医疗检测数据分析（专长）
+
+自动识别并生成 TOP 10 排名分析：
+
+| 分析维度 | 生成图表 | 说明 |
+|---------|---------|------|
+| 产品排名 | chart01_top10_products.png | 按销售额统计TOP10产品 |
+| 客户排名 | chart02_top10_customers.png | 按销售额统计TOP10客户 |
+| 销售人员排名 | chart03_top10_salespersons.png | 按销售额统计TOP10销售人员 |
+| 医院/机构排名 | chart04_top10_hospitals.png | 按销售额统计TOP10医院 |
+| 月度趋势 | chart05_monthly_trend.png | 月度销售额和订单量趋势 |
+| 付款方式 | chart06_payment_method.png | 对公/对私等付款分布 |
+| 价格区间 | chart07_price_distribution.png | 不同价格区间订单分布 |
+| 业务类别 | chart08_sales_category.png | 按业务类别统计 |
+| 时段分布 | chart09_hourly_pattern.png | 按小时统计销售额 |
+| 患者特征 | chart10_gender_distribution.png | 患者性别分布 |
+| 年龄分布 | chart11_age_distribution.png | 患者年龄段分布 |
+
+### 3. 自动数据分析
 
 分析维度包括：
 
@@ -78,18 +96,26 @@ metadata:
 - 数值分布直方图
 - 分布特征
 
-### 3. 智能图表生成
+### 4. 智能图表生成
 
 根据数据特征自动生成合适的图表：
 
 | 数据类型 | 生成图表 |
 |---------|---------|
+| 销售/订单数据 | TOP10产品/客户/销售人员/医院排名图 |
 | 多个数值字段 | 相关性热力图 |
 | 分类字段 | 分类分布图（TOP 10） |
-| 日期字段 | 时间序列趋势图 |
-| 数值字段 | 数值分布直方图 |
+| 日期字段 | 时间序列趋势图、月度趋势图 |
+| 数值字段 | 数值分布直方图、价格区间分布图 |
+| 患者数据 | 性别分布图、年龄分布图 |
 
-### 4. 报告输出
+### 5. 中文显示优化
+
+- 默认使用 Microsoft YaHei、SimHei 等中文字体
+- 自动处理中文编码问题
+- 支持 GBK、GB18030、UTF-8 等多种编码
+
+### 6. 报告输出
 
 #### Markdown 报告
 - 完整的分析内容
@@ -146,6 +172,17 @@ print(f"Word: {result['docx_report']}")
 print(f"Charts: {result['charts']}")
 ```
 
+### 方法 4：直接使用 analyze.py
+
+```python
+from analyze import summarize_csv
+
+results = summarize_csv('sales_data.csv', output_dir='./charts')
+
+print(f"Charts: {results['charts']}")
+print(f"Report Data: {results['report_data_path']}")
+```
+
 ## 输出文件
 
 执行后生成以下文件（保存在输出目录）：
@@ -154,24 +191,36 @@ print(f"Charts: {result['charts']}")
 |------|------|
 | `{文件名}_分析报告.md` | Markdown 格式分析报告 |
 | `{文件名}_分析报告.docx` | Word 格式分析报告 |
-| `correlation_heatmap.png` | 相关性热力图（如有多个数值字段） |
-| `categorical_distributions.png` | 分类分布图（如有分类字段） |
-| `distributions.png` | 数值分布图（如有数值字段） |
-| `time_series_trend.png` | 时间趋势图（如有日期字段） |
+| `charts/` | 图表目录 |
+| `chart01_top10_products.png` | TOP10产品排名图 |
+| `chart02_top10_customers.png` | TOP10客户排名图 |
+| `chart03_top10_salespersons.png` | TOP10销售人员排名图 |
+| `chart04_top10_hospitals.png` | TOP10医院排名图 |
+| `chart05_monthly_trend.png` | 月度趋势图 |
+| `chart06_payment_method.png` | 付款方式分布图 |
+| `chart07_price_distribution.png` | 价格区间分布图 |
+| `chart08_sales_category.png` | 业务类别分布图 |
+| `chart09_hourly_pattern.png` | 时段分布图 |
+| `chart10_gender_distribution.png` | 性别分布图 |
+| `chart11_age_distribution.png` | 年龄分布图 |
+| `report_data.json` | 结构化分析数据（JSON格式） |
 
 ## 报告结构
 
 生成的报告包含以下章节：
 
 1. **数据概览** - 记录数、字段数、数据来源
-2. **数据质量分析** - 缺失值、完整性
-3. **数值型数据分析** - 统计、相关性
-4. **分类型数据分析** - 分布、TOP值
-5. **时间序列分析** - 趋势、周期
-6. **数据分布分析** - 直方图
-7. **关键洞察与建议** - 业务洞察
-8. **图表清单** - 生成的图表列表
-9. **总结** - 分析总结
+2. **核心指标** - 总金额、订单数、客单价等关键指标
+3. **TOP 10 排名分析** - 产品、客户、销售人员、医院排名
+4. **月度趋势分析** - 时间变化趋势
+5. **付款方式分析** - 支付渠道分布
+6. **价格区间分析** - 不同价位销售分布
+7. **患者特征分析** - 性别、年龄等分布（医疗数据）
+8. **数据质量分析** - 缺失值、完整性
+9. **关键洞察与建议** - 业务洞察、存在问题、发展建议
+10. **行动计划** - 短期/中期/长期行动项
+11. **风险预警** - 业务风险、运营风险
+12. **总结** - 分析总结
 
 ## 配置说明
 
@@ -181,6 +230,10 @@ Word 报告默认使用：
 - **中文**：宋体（正文）、黑体（标题）
 - **英文**：Times New Roman
 - **字号**：正文 10.5pt（五号）、标题分级递减
+
+图表默认使用：
+- **中文**：Microsoft YaHei、SimHei、KaiTi、DengXian、FangSong
+- **英文**：DejaVu Sans
 
 ### 页面设置
 
@@ -215,8 +268,8 @@ python generate_report.py sales_2025.xlsx ./reports
 ✅ 数据分析完成
    - 记录数：10,582
    - 字段数：15
-   - 缺失率：3.2%
-   - 生成图表：4 张
+   - 总金额：¥5,000,000
+   - 生成图表：11 张
 
 【步骤 2/3】正在生成 Word 报告...
 ✅ Word 报告生成完成
@@ -224,14 +277,29 @@ python generate_report.py sales_2025.xlsx ./reports
 【步骤 3/3】生成文件清单
 📄 Markdown 报告：./reports/sales_2025_分析报告.md
 📄 Word 报告：./reports/sales_2025_分析报告.docx
-📊 可视化图表（4 张）：
-   - correlation_heatmap.png
-   - categorical_distributions.png
-   - distributions.png
-   - time_series_trend.png
+📊 可视化图表（11 张）：
+   - chart01_top10_products.png
+   - chart02_top10_customers.png
+   - chart03_top10_salespersons.png
+   - chart04_top10_hospitals.png
+   - chart05_monthly_trend.png
+   - chart06_payment_method.png
+   - chart07_price_distribution.png
+   - chart08_sales_category.png
+   - chart09_hourly_pattern.png
+   - chart10_gender_distribution.png
+   - chart11_age_distribution.png
 ```
 
-### 示例 2：客户数据分析
+### 示例 2：医疗检测数据分析
+
+```bash
+python analyze.py tumor_2025.xlsx ./output
+```
+
+自动识别为医疗检测数据，生成包含患者特征（性别、年龄分布）的分析报告。
+
+### 示例 3：Python 调用
 
 ```python
 from generate_report import generate_report
@@ -248,12 +316,12 @@ if result:
 ```
 data-analysis-report-skill/
 ├── generate_report.py        # 主脚本（一键生成）
-├── analyze.py                # 数据分析核心
+├── analyze.py                # 数据分析核心（支持TOP10排名分析）
 ├── markdown_to_docx.py       # Markdown 转 Word
 ├── requirements.txt          # Python 依赖
 ├── SKILL.md                  # 本文档
 └── resources/
-    ├── sample.csv            # 示例数据
+    ├── sample.csv           # 示例数据
     └── README.md             # 附加说明
 ```
 
@@ -271,11 +339,12 @@ pip install pandas openpyxl matplotlib seaborn python-docx
 ## 注意事项
 
 1. **文件格式**：仅支持 .csv, .xlsx, .xls
-2. **编码**：CSV 文件默认 UTF-8 编码
-3. **中文支持**：需要系统安装中文字体
+2. **编码**：CSV 文件自动识别 UTF-8、GBK、GB18030 等编码
+3. **中文支持**：需要系统安装中文字体（Windows 自带 Microsoft YaHei）
 4. **大文件**：超过 100 万行建议分批处理
 5. **内存**：大文件分析需要足够内存
 6. **图表**：根据数据特征智能选择生成的图表类型
+7. **编码列名**：Excel 文件列名乱码时，analyze.py 会尝试自动修复
 
 ## 常见问题
 
@@ -289,7 +358,7 @@ pip install pandas openpyxl matplotlib seaborn python-docx
 
 ### Q3: 中文字体显示异常？
 
-确保系统安装了中文字体（宋体、黑体），或修改代码指定字体路径。
+确保系统安装了中文字体（宋体、黑体），或修改代码指定字体路径。analyze.py 默认配置了多种中文字体备选。
 
 ### Q4: 图表中文乱码？
 
@@ -299,7 +368,23 @@ plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
 plt.rcParams['axes.unicode_minus'] = False
 ```
 
+### Q5: Excel 文件列名乱码？
+
+analyze.py 内置了列名修复功能，会自动处理常见的编码问题。
+
 ## 更新日志
+
+### v4.0.0 (2026-04-17)
+- ✅ 新增中文显示优化（Microsoft YaHei字体支持）
+- ✅ 新增销售/医疗数据 TOP 10 排名分析
+- ✅ 新增月度趋势分析图表
+- ✅ 新增付款方式分布分析
+- ✅ 新增价格区间分布分析
+- ✅ 新增时段分布（小时级）分析
+- ✅ 新增患者特征分析（性别、年龄分布）
+- ✅ 新增 Excel 文件支持（.xlsx）
+- ✅ 优化中文编码处理
+- ✅ 新增 report_data.json 输出
 
 ### v3.0.0 (2026-04-07)
 - ✅ 新增 XLSX 格式支持
@@ -320,5 +405,5 @@ plt.rcParams['axes.unicode_minus'] = False
 
 ---
 
-**维护者**：Qwen Code Skills
+**维护者**：AI Assistant
 **许可证**：MIT
